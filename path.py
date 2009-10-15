@@ -11,7 +11,7 @@ for f in d.files('*.py'):
 This module requires Python 2.2 or later.
 
 
-URL:     http://www.jorendorff.com/articles/python/path
+URL:     http://github.com/Singletoned/forked-path/raw/master/path.py
 Author:  Jason Orendorff <jason@jorendorff.com> (and others - see the url!)
 Date:    7 Mar 2004
 
