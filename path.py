@@ -36,8 +36,15 @@ import os
 import shutil
 import sys
 
-__all__ = ['path', "Path"]
+__all__ = ['path', "Path", "InsecurePathError"]
 __version__ = '0.1'
+
+### Errors
+
+class InsecurePathError(Exception):
+    """
+    Error that is raised when the path provided to path is invalid.
+    """
 
 ### Helpers
 
@@ -541,5 +548,19 @@ class Path(_base):
     if hasattr(os, 'chroot'):
         def chroot(self):
             os.chroot(self)
+
+    # --- Stuff from twisted.python.filepath
+
+    def child(self, child_path):
+        if (os.name == "nt") and (":" in self):
+            # Catch paths like C:blah that don't have a slash
+            raise InsecurePathError("%r contains a colon." % (child_path,))
+        norm = os.path.normpath(child_path)
+        if os.sep in norm:
+            raise InsecurePathError("%r contains one or more directory separators" % (child_path,))
+        newpath = os.path.join(self, norm)
+        if not newpath.startswith(self):
+            raise InsecurePathError("%r is not a child of %s" % (newpath, self))
+        return self.__class__(newpath)
 
 path = Path
