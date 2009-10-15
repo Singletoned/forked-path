@@ -36,7 +36,7 @@ import os
 import shutil
 import sys
 
-__all__ = ['path']
+__all__ = ['path', "Path"]
 __version__ = '0.1'
 
 ### Helpers
@@ -51,8 +51,9 @@ _base = str
 if os.path.supports_unicode_filenames:
     _base = unicode
 
+### Main path Class
 
-class path(_base):
+class Path(_base):
     """ Represents a filesystem path.
 
     For documentation on individual methods, consult their
@@ -540,3 +541,5 @@ class path(_base):
     if hasattr(os, 'chroot'):
         def chroot(self):
             os.chroot(self)
+
+path = Path
