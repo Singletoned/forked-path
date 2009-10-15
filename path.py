@@ -37,7 +37,9 @@ import shutil
 import sys
 
 __all__ = ['path']
-__version__ = '2.0.4'
+__version__ = '0.1'
+
+### Helpers
 
 # Universal newline support
 _textmode = 'r'
