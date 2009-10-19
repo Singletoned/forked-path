@@ -10,22 +10,20 @@ def test_repr():
 
 def test_abs_child():
     p = Path("/tmp/test_dir")
-    c = p.child("child_dir")
-    assert c.startswith("/tmp/test_dir")
-    assert c != p
-    assert c is not p
-
+    r = p.child("child_dir")
+    assert r.startswith("/tmp/test_dir")
+    assert r != p
+    assert r is not p
 
 def test_rel_child():
     p = Path("tmp/test_dir")
-    c = p.child("child_dir")
-    assert c.startswith("tmp/test_dir")
-    assert c != p
-    assert c is not p
-
+    r = p.child("child_dir")
+    assert r.startswith("tmp/test_dir")
+    assert r != p
+    assert r is not p
 
 @raises(InsecurePathError)
 def test_non_child():
     p = Path("tmp/test_dir")
-    c = p.child("../non_child_dir")
+    r = p.child("../non_child_dir")
     
