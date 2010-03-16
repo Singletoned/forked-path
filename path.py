@@ -83,7 +83,7 @@ class Path(_base):
         if len(args) == 1:
             return _base.__new__(typ, *args)
         return typ(os.path.join(*args))
-        
+
     def __repr__(self):
         return '%s(%r)' % (self.__class__.__name__, _base(self))
 
@@ -103,22 +103,22 @@ class Path(_base):
 
     def abspath(self):
         return self.__class__(os.path.abspath(self))
-    
+
     def normcase(self):
         return self.__class__(os.path.normcase(self))
-    
+
     def normpath(self):
         return self.__class__(os.path.normpath(self))
-    
+
     def realpath(self):
         return self.__class__(os.path.realpath(self))
-    
+
     def expanduser(self):
         return self.__class__(os.path.expanduser(self))
-    
+
     def expandvars(self):
         return self.__class__(os.path.expandvars(self))
-    
+
     def expand(self):
         """ Clean up a filename by calling expandvars(),
         expanduser(), and normpath() on it.
@@ -142,7 +142,7 @@ class Path(_base):
 
     def _get_dirname(self):
         return self.__class__(os.path.dirname(self))
-    
+
     parent = property(
         _get_dirname, None, None,
         """ This path's parent directory, as a new path object.
@@ -310,7 +310,7 @@ class Path(_base):
         whose names match the given pattern.  For example,
         d.files('*.pyc').
         """
-        
+
         return [p for p in self.listdir(pattern) if p.isfile()]
 
     def walk(self, pattern=None):
