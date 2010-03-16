@@ -99,6 +99,13 @@ def test_get_ext():
     assert r == ".file"
     assert not isinstance(r, Path)
 
+def test_parent():
+    # Test that parent returns the previous dir
+    p = Path("/tmp/sub_dir")
+    r = p.parent
+    assert r == "/tmp"
+    assert isinstance(r, Path)
+
 def test_abs_child():
     p = Path("/tmp/test_dir")
     r = p.child("child_dir")

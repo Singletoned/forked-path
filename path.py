@@ -87,8 +87,14 @@ class Path(_base):
     def __repr__(self):
         return '%s(%r)' % (self.__class__.__name__, _base(self))
 
-    # Adding a path and a string yields a path.
     def __add__(self, more):
+        """
+        Adding a path and a string yields a path
+
+        >>> p = Path('/tmp/')
+        >>> p + 'subdir'
+        Path('/tmp/subdir')
+        """
         return self.__class__(_base(self) + more)
 
     def __radd__(self, other):
@@ -102,6 +108,13 @@ class Path(_base):
     # --- Operations on path strings.
 
     def abspath(self):
+        """
+        Return the absolute path of the current path
+
+        >>> p = Path('/tmp/subdir/../subdir')
+        >>> p.abspath()
+        Path('/tmp/subdir')
+        """
         return self.__class__(os.path.abspath(self))
 
     def normcase(self):
@@ -147,27 +160,37 @@ class Path(_base):
         _get_dirname, None, None,
         """ This path's parent directory, as a new path object.
 
-        For example, path('/usr/local/lib/libpython.so').parent == path('/usr/local/lib')
+        >>> p = Path('/usr/local/lib/libpython.so')
+        >>> p.parent
+        Path('/usr/local/lib')
         """)
 
     name = property(
         os.path.basename, None, None,
         """ The name of this file or directory without the full path.
 
-        For example, path('/usr/local/lib/libpython.so').name == 'libpython.so'
+        >>> p = path('/usr/local/lib/libpython.so')
+        >>> p.name
+        'libpython.so'
         """)
 
     namebase = property(
         _get_namebase, None, None,
         """ The same as path.name, but with one file extension stripped off.
 
-        For example, path('/home/guido/python.tar.gz').name     == 'python.tar.gz',
-        but          path('/home/guido/python.tar.gz').namebase == 'python.tar'
+        >>> path('/home/guido/python.tar.gz').name
+        'python.tar.gz'
+        >>> path('/home/guido/python.tar.gz').namebase
+        'python.tar'
         """)
 
     ext = property(
         _get_ext, None, None,
-        """ The file extension, for example '.py'. """)
+        """ The last file extension
+
+        >>> path('/home/guido/python.tar.gz').ext
+        '.gz'
+        """)
 
     drive = property(
         _get_drive, None, None,
@@ -176,7 +199,11 @@ class Path(_base):
         """)
 
     def splitpath(self):
-        """ p.splitpath() -> Return (p.parent, p.name). """
+        """ A tuple of a path object of the dir, and a string of the filename
+
+        >>> path('/usr/local/lib/libpython.so').splitpath()
+        (Path('/usr/local/lib'), 'libpython.so')
+        """
         parent, child = os.path.split(self)
         return self.__class__(parent), child
 
