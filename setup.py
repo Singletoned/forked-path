@@ -13,11 +13,7 @@ setup(name='forked-path',
       classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='',
       license='',
-      # packages=find_packages('lib'),
-      # package_data=PackageData,
-      # package_dir = {'': 'lib'},
-      # packages = ["path"],
-      packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+      py_modules=['path'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
