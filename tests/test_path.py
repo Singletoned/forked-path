@@ -109,6 +109,7 @@ def test_parent():
 def test_abs_child():
     p = Path("/tmp/test_dir")
     r = p.child("child_dir")
+    assert r == "/tmp/test_dir/child_dir"
     assert r.startswith("/tmp/test_dir")
     assert r != p
     assert r is not p
@@ -116,6 +117,7 @@ def test_abs_child():
 def test_rel_child():
     p = Path("tmp/test_dir")
     r = p.child("child_dir")
+    assert r == "tmp/test_dir/child_dir"
     assert r.startswith("tmp/test_dir")
     assert r != p
     assert r is not p
