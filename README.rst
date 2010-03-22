@@ -2,6 +2,10 @@ A fork of Jason Orendorff's excellent path.py.  With the intention of
 giving it greater availabilty, tests, documentation and also bringing
 in some of the simpler parts of twisted.python.filepath.
 
+This module provides a subsclass of string (or unicode) with utility
+methods that provide easy access to most of os.path, and the relevant
+parts of os.
+
 Usage::
 
     >>> from path import Path
