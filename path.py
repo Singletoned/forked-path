@@ -264,6 +264,10 @@ class Path(_base):
         If there is no relative path from self to dest, for example if
         they reside on different drives in Windows, then this returns
         dest.abspath().
+
+        >>> p = Path('/usr/local/lib/libpython.so')
+        >>> p.relpathto('/tmp/subdir/')
+        Path('../../../../tmp/subdir')
         """
         origin = self.abspath()
         dest = self.__class__(dest).abspath()
