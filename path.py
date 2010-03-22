@@ -588,10 +588,12 @@ class Path(_base):
             raise InsecurePathError("%r contains a colon." % (child_path,))
         norm = os.path.normpath(child_path)
         if os.sep in norm:
-            raise InsecurePathError("%r contains one or more directory separators" % (child_path,))
+            raise InsecurePathError(
+                "%r contains one or more directory separators" % (child_path,))
         newpath = os.path.join(self, norm)
         if not newpath.startswith(self):
-            raise InsecurePathError("%r is not a child of %s" % (newpath, self))
+            raise InsecurePathError(
+                "%r is not a child of %s" % (newpath, self))
         return self.__class__(newpath)
 
 path = Path
