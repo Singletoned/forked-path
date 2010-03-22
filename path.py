@@ -17,6 +17,7 @@ Date:    7 Mar 2004
 
 Adapted for stdlib by: Reinhold Birkenfeld, July 2005
 Modified by Björn Lindqvist <bjourne@gmail.com>, January 2006
+Rereleased by Ed Singleton, March 2010
 """
 
 # TODO
