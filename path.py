@@ -37,7 +37,7 @@ import os
 import shutil
 import sys
 
-__all__ = ['path', "Path", "InsecurePathError"]
+__all__ = ['path', "InsecurePathError"]
 __version__ = '0.1'
 
 ### Errors
@@ -61,7 +61,7 @@ if os.path.supports_unicode_filenames:
 
 ### Main path Class
 
-class Path(_base):
+class path(_base):
     """ Represents a filesystem path.
 
     For documentation on individual methods, consult their
@@ -72,14 +72,14 @@ class Path(_base):
     def __new__(typ, *args):
         """
         Creates a new path object concatenating the *args.  *args
-        may only contain Path objects or strings.  If *args is
-        empty, Path(os.curdir) is created.
+        may only contain path objects or strings.  If *args is
+        empty, path(os.curdir) is created.
         """
         if not args:
             return typ(os.curdir)
         for arg in args:
             if not isinstance(arg, basestring):
-                raise ValueError("%s() arguments must be Path, str or "
+                raise ValueError("%s() arguments must be path, str or "
                                  "unicode" % typ.__name__)
         if len(args) == 1:
             return _base.__new__(typ, *args)
@@ -92,9 +92,9 @@ class Path(_base):
         """
         Adding a path and a string yields a path
 
-        >>> p = Path('/tmp/')
+        >>> p = path('/tmp/')
         >>> p + 'subdir'
-        Path('/tmp/subdir')
+        path('/tmp/subdir')
         """
         return self.__class__(_base(self) + more)
 
@@ -112,9 +112,9 @@ class Path(_base):
         """
         Return the absolute path of the current path
 
-        >>> p = Path('/tmp/subdir/../subdir')
+        >>> p = path('/tmp/subdir/../subdir')
         >>> p.abspath()
-        Path('/tmp/subdir')
+        path('/tmp/subdir')
         """
         return self.__class__(os.path.abspath(self))
 
@@ -161,9 +161,9 @@ class Path(_base):
         _get_dirname, None, None,
         """ This path's parent directory, as a new path object.
 
-        >>> p = Path('/usr/local/lib/libpython.so')
+        >>> p = path('/usr/local/lib/libpython.so')
         >>> p.parent
-        Path('/usr/local/lib')
+        path('/usr/local/lib')
         """)
 
     name = property(
@@ -203,7 +203,7 @@ class Path(_base):
         """ A tuple of a path object of the dir, and a string of the filename
 
         >>> path('/usr/local/lib/libpython.so').splitpath()
-        (Path('/usr/local/lib'), 'libpython.so')
+        (path('/usr/local/lib'), 'libpython.so')
         """
         parent, child = os.path.split(self)
         return self.__class__(parent), child
@@ -266,9 +266,9 @@ class Path(_base):
         they reside on different drives in Windows, then this returns
         dest.abspath().
 
-        >>> p = Path('/usr/local/lib/libpython.so')
+        >>> p = path('/usr/local/lib/libpython.so')
         >>> p.relpathto('/tmp/subdir/')
-        Path('../../../../tmp/subdir')
+        path('../../../../tmp/subdir')
         """
         origin = self.abspath()
         dest = self.__class__(dest).abspath()
@@ -596,5 +596,3 @@ class Path(_base):
             raise InsecurePathError(
                 "%r is not a child of %s" % (newpath, self))
         return self.__class__(newpath)
-
-path = Path

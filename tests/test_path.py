@@ -1,37 +1,35 @@
 from nose.tools import raises
 
-from path import Path, InsecurePathError
-
+from path import path, InsecurePathError
 
 def test_repr():
-    p = Path("/temp/test_dir")
-    print repr(p)
-    assert repr(p) == "Path('/temp/test_dir')"
+    p = path("/temp/test_dir")
+    assert repr(p) == "path('/temp/test_dir')"
 
 def test__add():
-    p = Path("/tmp/test_dir")
+    p = path("/tmp/test_dir")
     r = p + "sub_dir"
     assert r == "/tmp/test_dirsub_dir"
     r = p + "/sub_dir"
     assert r == "/tmp/test_dir/sub_dir"
-    p = Path("/tmp/test_dir/")
+    p = path("/tmp/test_dir/")
     r = p + "sub_dir"
     assert r == "/tmp/test_dir/sub_dir"
-    p = Path("/tmp/test_dir/")
+    p = path("/tmp/test_dir/")
     r = p + "/sub_dir"
     assert r == "/tmp/test_dir//sub_dir"
 
 def test__radd():
-    p = Path("sub_dir")
+    p = path("sub_dir")
     r = "/tmp/test_dir" + p
     assert r == "/tmp/test_dirsub_dir"
-    p = Path("/sub_dir")
+    p = path("/sub_dir")
     r = "/tmp/test_dir" + p
     assert r == "/tmp/test_dir/sub_dir"
-    p = Path("sub_dir")
+    p = path("sub_dir")
     r = "/tmp/test_dir/" + p
     assert r == "/tmp/test_dir/sub_dir"
-    p = Path("/sub_dir")
+    p = path("/sub_dir")
     r = "/tmp/test_dir/" + p
     assert r == "/tmp/test_dir//sub_dir"
 
@@ -40,33 +38,33 @@ def test_cwd():
     pass
 
 def test_abspath():
-    # Check that abspath converts to Path
-    p = Path("/tmp/../tmp/test_dir")
+    # Check that abspath converts to path
+    p = path("/tmp/../tmp/test_dir")
     r = p.abspath()
     assert r == "/tmp/test_dir"
-    assert isinstance(r, Path)
+    assert isinstance(r, path)
 
 def test_normcase():
     # TODO
     pass
 
 def test_normpath():
-    # Check that normpath runs and converts to Path
-    p = Path("/tmp/..//tmp/test_dir")
+    # Check that normpath runs and converts to path
+    p = path("/tmp/..//tmp/test_dir")
     r = p.normpath()
     assert r == "/tmp/test_dir"
-    assert isinstance(r, Path)
+    assert isinstance(r, path)
 
 def test_realpath():
     # TODO
     pass
 
 def test_expanduser():
-    # Check that expanduser runs and converts to Path
-    p = Path("/tmp")
+    # Check that expanduser runs and converts to path
+    p = path("/tmp")
     r = p.expanduser()
     assert r == p
-    assert isinstance(r, Path)
+    assert isinstance(r, path)
     # TODO: Check that it expands `~` properly
 
 def test_expandvars():
@@ -79,35 +77,35 @@ def test_expand():
 
 def test_get_namebase():
     # Test that _get_namebase doesn't return a path
-    p = Path("/tmp/test_file")
+    p = path("/tmp/test_file")
     r = p._get_namebase()
     assert r == "test_file"
-    assert not isinstance(r, Path)
-    p = Path("/tmp/test.file")
+    assert not isinstance(r, path)
+    p = path("/tmp/test.file")
     r = p._get_namebase()
     assert r == "test"
-    assert not isinstance(r, Path)
+    assert not isinstance(r, path)
 
 def test_get_ext():
     # Test that _get_ext doesn't return a path
-    p = Path("/tmp/test_file")
+    p = path("/tmp/test_file")
     r = p._get_ext()
     assert r == ""
-    assert not isinstance(r, Path)
-    p = Path("/tmp/test.file")
+    assert not isinstance(r, path)
+    p = path("/tmp/test.file")
     r = p._get_ext()
     assert r == ".file"
-    assert not isinstance(r, Path)
+    assert not isinstance(r, path)
 
 def test_parent():
     # Test that parent returns the previous dir
-    p = Path("/tmp/sub_dir")
+    p = path("/tmp/sub_dir")
     r = p.parent
     assert r == "/tmp"
-    assert isinstance(r, Path)
+    assert isinstance(r, path)
 
 def test_abs_child():
-    p = Path("/tmp/test_dir")
+    p = path("/tmp/test_dir")
     r = p.child("child_dir")
     assert r == "/tmp/test_dir/child_dir"
     assert r.startswith("/tmp/test_dir")
@@ -115,7 +113,7 @@ def test_abs_child():
     assert r is not p
 
 def test_rel_child():
-    p = Path("tmp/test_dir")
+    p = path("tmp/test_dir")
     r = p.child("child_dir")
     assert r == "tmp/test_dir/child_dir"
     assert r.startswith("tmp/test_dir")
@@ -124,6 +122,5 @@ def test_rel_child():
 
 @raises(InsecurePathError)
 def test_non_child():
-    p = Path("tmp/test_dir")
+    p = path("tmp/test_dir")
     r = p.child("../non_child_dir")
-    

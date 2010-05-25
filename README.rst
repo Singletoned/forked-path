@@ -8,16 +8,16 @@ parts of os.
 
 Usage::
 
-    >>> from path import Path
-    >>> tmp_dir = Path('/tmp/')
+    >>> from path import path
+    >>> tmp_dir = path('/tmp/')
     >>> tmp_dir
-    Path('/tmp/')
+    path('/tmp/')
     >>> tmp_dir_existed = tmp_dir.exists()
     >>> tmp_dir == '/tmp/'
     True
     >>> sub_dir = tmp_dir + 'sub_dir/'
     >>> sub_dir
-    Path('/tmp/sub_dir/')
+    path('/tmp/sub_dir/')
     >>> sub_dir.makedirs()
     >>> file1 = sub_dir + 'file1.txt'
     >>> file1.touch()
