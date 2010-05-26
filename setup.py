@@ -10,16 +10,16 @@ setup(name='forked-path',
       url="http://github.com/Singletoned/forked-path",
       long_description="""A fork of path.py by Jason Orendorff.  Regression tests and small enhancements by Ed Singleton.
 """,
-      classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-      keywords='',
+      classifiers=[
+        "Programming Language :: Python",
+        "License :: Freely Distributable",
+        "Operating System :: OS Independent",
+        "Intended Audience :: Developers",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+      ],
+      keywords='path path.py file',
       license='',
       py_modules=['path'],
       include_package_data=True,
       zip_safe=False,
-      install_requires=[
-          # -*- Extra requirements: -*-
-      ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
-      )
+)
