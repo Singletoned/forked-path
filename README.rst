@@ -41,3 +41,11 @@ Usage::
     ... 
 
 
+This module should be as stable as the last release of path.py (2.2),
+and I am gradually adding regression tests to ensure that compatabilty
+is kept going forward.  However this module itself isn't being used in
+production yet, and hasn't been tested thoroughly on Windows, so some
+caution should be taken for now.
+
+I'm happy to take any suggestions, criticism, advice or comments.  For
+now, email me at singletoned@gmail.com or use the messages on github.
