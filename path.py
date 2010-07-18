@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 """ path.py - An object representing a path to a file or directory.
 
 Example:
@@ -16,7 +16,7 @@ Author:  Jason Orendorff <jason@jorendorff.com> (and others - see the url!)
 Date:    7 Mar 2004
 
 Adapted for stdlib by: Reinhold Birkenfeld, July 2005
-Modified by Björn Lindqvist <bjourne@gmail.com>, January 2006
+Modified by BjÃ¶rn Lindqvist <bjourne@gmail.com>, January 2006
 Rereleased by Ed Singleton, March 2010
 """
 
