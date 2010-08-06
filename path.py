@@ -103,6 +103,13 @@ class path(_base):
 
     # Adding a path and a string yields a path.
     def __add__(self, more):
+        """
+        Adding a path and a string yields a path
+
+        >>> p = path('/tmp/')
+        >>> p + 'subdir'
+        path('/tmp/subdir')
+        """
         try:
             resultStr = _base.__add__(self, more)
         except TypeError:  #Python bug
@@ -119,10 +126,18 @@ class path(_base):
 
     # The / operator joins paths.
     def __div__(self, rel):
-        """ fp.__div__(rel) == fp / rel == fp.joinpath(rel)
-
-        Join two path components, adding a separator character if
+        """Join two path components, adding a separator character if
         needed.
+
+        >>> p = path('/tmp/')
+        >>> p.__div__('subdir') == p / 'subdir'
+        True
+        >>> p / 'subdir' == p.joinpath('subdir')
+        True
+        >>> path('/tmp/') / 'subdir'
+        path('/tmp/subdir')
+        >>> path('/tmp') / 'subdir'
+        path('/tmp/subdir')
         """
         return self.__class__(os.path.join(self, rel))
 
