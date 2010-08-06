@@ -1,4 +1,7 @@
-from nose.tools import raises
+try:
+    import py
+except ImportError:
+    py = None
 
 from path import path, InsecurePathError
 
@@ -120,7 +123,8 @@ def test_rel_child():
     assert r != p
     assert r is not p
 
-@raises(InsecurePathError)
-def test_non_child():
-    p = path("tmp/test_dir")
-    r = p.child("../non_child_dir")
+if py:
+    def test_non_child():
+        with py.test.raises(InsecurePathError):
+            p = path("tmp/test_dir")
+            r = p.child("../non_child_dir")
