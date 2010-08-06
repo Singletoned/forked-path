@@ -37,7 +37,7 @@ from __future__ import generators
 import sys, warnings, os, fnmatch, glob, shutil, codecs, md5
 
 __version__ = '2.2'
-__all__ = ['path']
+__all__ = ['path', "InsecurePathError"]
 
 # Platform-specific support for path.owner
 if os.name == 'nt':
@@ -78,9 +78,16 @@ _textmode = 'r'
 if hasattr(file, 'newlines'):
     _textmode = 'U'
 
+### Errors
+
+class InsecurePathError(Exception):
+    """
+    Error that is raised when the path provided to path is invalid.
+    """
 
 class TreeWalkWarning(Warning):
     pass
+
 
 class path(_base):
     """ Represents a filesystem path.
@@ -973,3 +980,19 @@ class path(_base):
         def startfile(self):
             os.startfile(self)
 
+
+    # --- Stuff from twisted.python.filepath
+
+    def child(self, child_path):
+        if (os.name == "nt") and (":" in self):
+            # Catch paths like C:blah that don't have a slash
+            raise InsecurePathError("%r contains a colon." % (child_path,))
+        norm = os.path.normpath(child_path)
+        if os.sep in norm:
+            raise InsecurePathError(
+                "%r contains one or more directory separators" % (child_path,))
+        newpath = os.path.join(self, norm)
+        if not newpath.startswith(self):
+            raise InsecurePathError(
+                "%r is not a child of %s" % (newpath, self))
+        return self.__class__(newpath)
