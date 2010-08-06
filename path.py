@@ -11,11 +11,15 @@ for f in d.files('*.py'):
 This module requires Python 2.2 or later.
 
 
-URL:     http://www.jorendorff.com/articles/python/path
-Author:  Jason Orendorff <jason.orendorff\x40gmail\x2ecom> (and others - see the url!)
-Date:    9 Mar 2007
-"""
+URL:     http://github.com/Singletoned/forked-path/raw/master/path.py
+Author:  Jason Orendorff <jason@jorendorff.com>
+Maintainer: Ed Singleton <singletoned@gmail.com>
+Date:    2010-08-05
 
+Adapted for stdlib by: Reinhold Birkenfeld, July 2005
+Modified by Björn Lindqvist <bjourne@gmail.com>, January 2006
+Rereleased by Ed Singleton, March 2010
+"""
 
 # TODO
 #   - Tree-walking functions don't avoid symlink loops.  Matt Harrison
