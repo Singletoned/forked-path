@@ -153,7 +153,16 @@ class path(_base):
     # --- Operations on path strings.
 
     isabs = os.path.isabs
-    def abspath(self):       return self.__class__(os.path.abspath(self))
+    def abspath(self):
+        """
+        Return the absolute path of the current path
+
+        >>> p = path('/tmp/subdir/../subdir')
+        >>> p.abspath()
+        path('/tmp/subdir')
+        """
+        return self.__class__(os.path.abspath(self))
+
     def normcase(self):      return self.__class__(os.path.normcase(self))
     def normpath(self):      return self.__class__(os.path.normpath(self))
     def realpath(self):      return self.__class__(os.path.realpath(self))
