@@ -1026,6 +1026,16 @@ class path(_base):
     # --- Stuff from twisted.python.filepath
 
     def child(self, child_path):
+        """
+        Return a path which is a direct descendant of the current path.  Raises an exception if it isn't.
+
+        >>> path('/tmp').child('foo')
+        path('/tmp/foo')
+        >>> path('/tmp/bar').child('../foo')
+        Traceback (most recent call last):
+        ...
+        InsecurePathError: '../foo' contains one or more directory separators
+        """
         if (os.name == "nt") and (":" in self):
             # Catch paths like C:blah that don't have a slash
             raise InsecurePathError("%r contains a colon." % (child_path,))
