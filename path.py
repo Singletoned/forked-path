@@ -196,27 +196,37 @@ class path(_base):
         dirname, None, None,
         """ This path's parent directory, as a new path object.
 
-        For example, path('/usr/local/lib/libpython.so').parent == path('/usr/local/lib')
+        >>> p = path('/usr/local/lib/libpython.so')
+        >>> p.parent
+        path('/usr/local/lib')
         """)
 
     name = property(
         basename, None, None,
         """ The name of this file or directory without the full path.
 
-        For example, path('/usr/local/lib/libpython.so').name == 'libpython.so'
+        >>> p = path('/usr/local/lib/libpython.so')
+        >>> p.name
+        'libpython.so'
         """)
 
     namebase = property(
         _get_namebase, None, None,
         """ The same as path.name, but with one file extension stripped off.
 
-        For example, path('/home/guido/python.tar.gz').name     == 'python.tar.gz',
-        but          path('/home/guido/python.tar.gz').namebase == 'python.tar'
+        >>> path('/home/guido/python.tar.gz').name
+        'python.tar.gz'
+        >>> path('/home/guido/python.tar.gz').namebase
+        'python.tar'
         """)
 
     ext = property(
         _get_ext, None, None,
-        """ The file extension, for example '.py'. """)
+        """ The file extension, for example '.py'.
+
+        >>> path('/home/guido/python.tar.gz').ext
+        '.gz'
+        """)
 
     drive = property(
         _get_drive, None, None,
@@ -225,7 +235,11 @@ class path(_base):
         """)
 
     def splitpath(self):
-        """ p.splitpath() -> Return (p.parent, p.name). """
+        """ p.splitpath() -> Return (p.parent, p.name).
+
+        >>> path('/usr/local/lib/libpython.so').splitpath()
+        (path('/usr/local/lib'), 'libpython.so')
+        """
         parent, child = os.path.split(self)
         return self.__class__(parent), child
 
@@ -316,6 +330,10 @@ class path(_base):
         If there is no relative path from self to dest, for example if
         they reside on different drives in Windows, then this returns
         dest.abspath().
+
+        >>> p = path('/usr/local/lib/libpython.so')
+        >>> p.relpathto('/tmp/subdir/')
+        path('../../../../tmp/subdir')
         """
         origin = self.abspath()
         dest = self.__class__(dest).abspath()
