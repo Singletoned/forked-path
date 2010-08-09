@@ -17,6 +17,7 @@ setup(
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries :: Python Modules",
+        "Development Status :: 4 - Beta",
     ],
     keywords='path path.py file',
     license='',
