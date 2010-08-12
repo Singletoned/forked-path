@@ -1,3 +1,5 @@
+import StringIO
+
 try:
     import py
 except ImportError:
@@ -130,3 +132,12 @@ if py:
             r = p.child("../non_child_dir")
 
         py.test.raises(InsecurePathError, do_test)
+
+def test_hash():
+    def mock_open(self):
+        return StringIO.StringIO("hello\n")
+
+    m = path("/tmp/hullo.txt")
+    m.open = mock_open
+    h = m.read_md5()
+    assert h == '\xb1\x94j\xc9$\x92\xd24|b5\xb4\xd2a\x11\x84'
