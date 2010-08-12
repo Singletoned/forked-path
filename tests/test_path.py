@@ -1,5 +1,3 @@
-from __future__ import with_statement
-
 try:
     import py
 except ImportError:
@@ -127,6 +125,8 @@ def test_rel_child():
 
 if py:
     def test_non_child():
-        with py.test.raises(InsecurePathError):
+        def do_test():
             p = path("tmp/test_dir")
             r = p.child("../non_child_dir")
+
+        py.test.raises(InsecurePathError, do_test)
