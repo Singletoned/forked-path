@@ -24,3 +24,11 @@ def test_create_temp_file():
         assert filename_2.text() == "foo"
     assert not filename_1.exists()
     assert not filename_2.exists()
+
+def test_create_temp_dir():
+    with path.create_temp_dir() as temp_dir_name:
+        for file_name in ['a', 'b', 'c']:
+            len(temp_dir_name.files()) == 0
+            temp_dir_name.child(file_name).touch()
+        assert len(temp_dir_name.files()) == 3
+    assert not temp_dir_name.exists()

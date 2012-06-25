@@ -1078,3 +1078,9 @@ if contextlib:
             yield filenames[0]
         for filename in filenames:
             filename.remove()
+
+    @contextlib.contextmanager
+    def create_temp_dir():
+        temp_dir_name = temp_dir()
+        yield temp_dir_name
+        temp_dir_name.rmtree()
