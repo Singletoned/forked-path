@@ -34,7 +34,7 @@ Rereleased by Ed Singleton, March 2010
 
 from __future__ import generators
 
-import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib
+import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib, tempfile
 
 __version__ = '2.2'
 __all__ = ['path', "InsecurePathError"]
@@ -1048,3 +1048,8 @@ class path(_base):
             raise InsecurePathError(
                 "%r is not a child of %s" % (newpath, self))
         return self.__class__(newpath)
+
+def temp_file():
+    "Create a temp file and return a path object of it"
+    file_name = tempfile.NamedTemporaryFile(delete=False).name
+    return path(file_name)
