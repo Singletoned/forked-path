@@ -1053,3 +1053,7 @@ def temp_file():
     "Create a temp file and return a path object of it"
     file_name = tempfile.NamedTemporaryFile(delete=False).name
     return path(file_name)
+
+def temp_dir():
+    dir_name = tempfile.mkdtemp()
+    return path(dir_name)
