@@ -61,6 +61,12 @@ try:
 except AttributeError:
     pass
 
+# Try importing contextlib
+try:
+    import contextlib
+except ImportError:
+    contextlib = None
+
 # Pre-2.3 workaround for booleans
 try:
     True, False
@@ -1057,3 +1063,18 @@ def temp_file():
 def temp_dir():
     dir_name = tempfile.mkdtemp()
     return path(dir_name)
+
+if contextlib:
+    @contextlib.contextmanager
+    def create_temp_file(content=None, count=1):
+        filenames = [temp_file() for i in range(count)]
+        if content:
+            for filename in filenames:
+                with open(filename, 'w') as opened_file:
+                    opened_file.write(content)
+        if count > 1:
+            yield filenames
+        else:
+            yield filenames[0]
+        for filename in filenames:
+            filename.remove()
