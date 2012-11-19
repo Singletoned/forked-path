@@ -1084,3 +1084,10 @@ if contextlib:
         temp_dir_name = temp_dir()
         yield temp_dir_name
         temp_dir_name.rmtree()
+
+    @contextlib.contextmanager
+    def temp_sys_argv(*args):
+        old_sys_argv = sys.argv
+        sys.argv = args
+        yield
+        sys.argv = old_sys_argv
