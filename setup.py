@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 version = '0.3'
 
@@ -9,8 +9,10 @@ setup(
     author_email="singletoned@gmail.com",
     description="An object oriented file path module",
     url="http://github.com/Singletoned/forked-path",
-    long_description="""A fork of path.py by Jason Orendorff.  Regression tests and small enhancements by Ed Singleton.
-""",
+    long_description="""
+    A fork of path.py by Jason Orendorff.
+    Regression tests and small enhancements by Ed Singleton.
+    """,
     classifiers=[
         "Programming Language :: Python",
         "License :: Freely Distributable",
