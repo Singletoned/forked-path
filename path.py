@@ -45,7 +45,7 @@ import sys
 import tempfile
 import warnings
 
-__version__ = '2.2'
+__version__ = '0.3'
 __all__ = ['path', "InsecurePathError"]
 
 # Platform-specific support for path.owner
