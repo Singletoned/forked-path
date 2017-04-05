@@ -32,7 +32,6 @@ Rereleased by Ed Singleton, March 2010
 #   - guess_content_type() method?
 #   - Perhaps support arguments to touch().
 
-from __future__ import generators
 
 import codecs
 import contextlib
@@ -44,6 +43,8 @@ import shutil
 import sys
 import tempfile
 import warnings
+
+import six
 
 __version__ = '0.3'
 __all__ = ['path', "InsecurePathError"]
@@ -101,7 +102,7 @@ class path(str):
         return self.__class__(resultStr)
 
     def __radd__(self, other):
-        if isinstance(other, basestring):
+        if isinstance(other, six.string_types):
             return self.__class__(other.__add__(self))
         else:
             return NotImplemented
@@ -564,7 +565,7 @@ class path(str):
 
     def open(self, mode='r'):
         """ Open this file.  Return a file object. """
-        return file(self, mode)
+        return open(self, mode)
 
     def bytes(self):
         """ Open this file, read all bytes, return them as a string. """
@@ -621,11 +622,11 @@ class path(str):
                 t = f.read()
             finally:
                 f.close()
-            return (t.replace(u'\r\n', u'\n')
-                     .replace(u'\r\x85', u'\n')
-                     .replace(u'\r', u'\n')
-                     .replace(u'\x85', u'\n')
-                     .replace(u'\u2028', u'\n'))
+            return (t.replace(six.u('\r\n'), six.u('\n'))
+                     .replace(six.u('\r\x85'), six.u('\n'))
+                     .replace(six.u('\r'), six.u('\n'))
+                     .replace(six.u('\x85'), six.u('\n'))
+                     .replace(six.u('\u2028'), six.u('\n')))
 
     def write_text(self, text, encoding=None, errors='strict',
                    linesep=os.linesep, append=False):
@@ -692,16 +693,16 @@ class path(str):
         conversion.
 
         """
-        if isinstance(text, unicode):
+        if isinstance(text, six.string_types):
             if linesep is not None:
                 # Convert all standard end-of-line sequences to
                 # ordinary newline characters.
-                text = (text.replace(u'\r\n', u'\n')
-                            .replace(u'\r\x85', u'\n')
-                            .replace(u'\r', u'\n')
-                            .replace(u'\x85', u'\n')
-                            .replace(u'\u2028', u'\n'))
-                text = text.replace(u'\n', linesep)
+                text = (text.replace(six.u('\r\n'), six.u('\n'))
+                            .replace(six.u('\r\x85'), six.u('\n'))
+                            .replace(six.u('\r'), six.u('\n'))
+                            .replace(six.u('\x85'), six.u('\n'))
+                            .replace(six.u('\u2028'), six.u('\n')))
+                text = text.replace(six.u('\n'), linesep)
             if encoding is None:
                 encoding = sys.getdefaultencoding()
             bytes = text.encode(encoding, errors)
@@ -784,15 +785,15 @@ class path(str):
         f = self.open(mode)
         try:
             for line in lines:
-                isUnicode = isinstance(line, unicode)
+                isUnicode = isinstance(line, six.string_types)
                 if linesep is not None:
                     # Strip off any existing line-end and add the
                     # specified linesep string.
                     if isUnicode:
-                        if line[-2:] in (u'\r\n', u'\x0d\x85'):
+                        if line[-2:] in (six.u('\r\n'), six.u('\x0d\x85')):
                             line = line[:-2]
-                        elif line[-1:] in (u'\r', u'\n',
-                                           u'\x85', u'\u2028'):
+                        elif line[-1:] in (six.u('\r'), six.u('\n'),
+                                           six.u('\x85'), six.u('\u2028')):
                             line = line[:-1]
                     else:
                         if line[-2:] == '\r\n':
@@ -889,7 +890,7 @@ class path(str):
             sid = desc.GetSecurityDescriptorOwner()
             account, domain, typecode = win32security.LookupAccountSid(
                 None, sid)
-            return domain + u'\\' + account
+            return domain + six.u('\\') + account
         else:
             if pwd is None:
                 raise NotImplementedError(

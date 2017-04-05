@@ -19,10 +19,17 @@ Date:    7 Mar 2004
 
 import unittest
 import codecs, os, random, shutil, tempfile, time
+
+import six
+
 from path import path, __version__ as path_version
 
 # This should match the version of path.py being tested.
 __version__ = '2.2'
+
+
+def join(*args):
+    return "".join(args)
 
 
 def p(**choices):
@@ -65,7 +72,7 @@ class BasicTestCase(unittest.TestCase):
         """ Test compatibility with ordinary strings. """
         x = path('xyzzy')
         self.assert_(x == 'xyzzy')
-        self.assert_(x == u'xyzzy')
+        self.assert_(x == six.u('xyzzy'))
 
         # sorting
         items = [path('fhj'),
@@ -76,7 +83,7 @@ class BasicTestCase(unittest.TestCase):
                  path('B'),
                  'c']
         items.sort()
-        self.assert_(items == ['A', 'B', 'E', 'c', 'd', 'fgh', 'fhj'])
+        self.assertTrue(items == ['A', 'B', 'E', 'c', 'd', 'fgh', 'fhj'])
 
         # Test p1/p1.
         p1 = path("foo")
@@ -110,14 +117,14 @@ class BasicTestCase(unittest.TestCase):
 
         # .getcwd()
         cwd = path.getcwd()
-        self.assert_(isinstance(cwd, path))
+        self.assertTrue(isinstance(cwd, path))
         self.assertEqual(cwd, os.getcwd())
 
     def testUNC(self):
         if hasattr(os.path, 'splitunc'):
             p = path(r'\\python1\share1\dir1\file1.txt')
-            self.assert_(p.uncshare == r'\\python1\share1')
-            self.assert_(p.splitunc() == os.path.splitunc(str(p)))
+            self.assertTrue(p.uncshare == r'\\python1\share1')
+            self.assertTrue(p.splitunc() == os.path.splitunc(str(p)))
 
 class TempDirTestCase(unittest.TestCase):
     def setUp(self):
@@ -145,17 +152,17 @@ class TempDirTestCase(unittest.TestCase):
         f.touch()
         t1 = time.time() + 3
         try:
-            self.assert_(f.exists())
-            self.assert_(f.isfile())
+            self.assertTrue(f.exists())
+            self.assertTrue(f.isfile())
             self.assertEqual(f.size, 0)
-            self.assert_(t0 <= f.mtime <= t1)
+            self.assertTrue(t0 <= f.mtime <= t1)
             if hasattr(os.path, 'getctime'):
                 ct = f.ctime
-                self.assert_(t0 <= ct <= t1)
+                self.assertTrue(t0 <= ct <= t1)
 
             time.sleep(5)
-            fobj = file(f, 'ab')
-            fobj.write('some bytes')
+            fobj = open(f, 'ab')
+            fobj.write(b'some bytes')
             fobj.close()
 
             time.sleep(5)
@@ -165,20 +172,20 @@ class TempDirTestCase(unittest.TestCase):
 
             assert t0 <= t1 < t2 <= t3  # sanity check
 
-            self.assert_(f.exists())
-            self.assert_(f.isfile())
+            self.assertTrue(f.exists())
+            self.assertTrue(f.isfile())
             self.assertEqual(f.size, 10)
-            self.assert_(t2 <= f.mtime <= t3)
+            self.assertTrue(t2 <= f.mtime <= t3)
             if hasattr(os.path, 'getctime'):
                 ct2 = f.ctime
                 if os.name == 'nt':
                     # On Windows, "ctime" is CREATION time
                     self.assertEqual(ct, ct2)
-                    self.assert_(ct2 < t2)
+                    self.assertTrue(ct2 < t2)
                 else:
                     # On other systems, it might be the CHANGE time 
                     # (especially on Unix, time of inode changes)
-                    self.failUnless(ct == ct2 or ct2 == f.mtime)
+                    self.assertTrue(ct == ct2 or ct2 == f.mtime)
         finally:
             f.remove()
 
@@ -191,7 +198,7 @@ class TempDirTestCase(unittest.TestCase):
         self.assertEqual(af, os.path.join(d, f))
         af.touch()
         try:
-            self.assert_(af.exists())
+            self.assertTrue(af.exists())
 
             self.assertEqual(d.listdir(), [af])
 
@@ -209,7 +216,7 @@ class TempDirTestCase(unittest.TestCase):
         # Try a test with 20 files
         files = [d / ('%d.txt' % i) for i in range(20)]
         for f in files:
-            fobj = file(f, 'w')
+            fobj = open(f, 'w')
             fobj.write('some text\n')
             fobj.close()
         try:
@@ -236,20 +243,20 @@ class TempDirTestCase(unittest.TestCase):
             boz =      foo / 'bar' / 'baz' / 'boz'
             boz.makedirs()
             try:
-                self.assert_(boz.isdir())
+                self.assertTrue(boz.isdir())
             finally:
                 boz.removedirs()
-            self.failIf(foo.exists())
-            self.assert_(d.exists())
+            self.assertFalse(foo.exists())
+            self.assertTrue(d.exists())
 
-            foo.mkdir(0750)
-            boz.makedirs(0700)
+            foo.mkdir(0o750)
+            boz.makedirs(0o700)
             try:
-                self.assert_(boz.isdir())
+                self.assertTrue(boz.isdir())
             finally:
                 boz.removedirs()
-            self.failIf(foo.exists())
-            self.assert_(d.exists())
+            self.assertFalse(foo.exists())
+            self.assertTrue(d.exists())
         finally:
             os.remove(tempf)
 
@@ -286,14 +293,14 @@ class TempDirTestCase(unittest.TestCase):
 
         # Test simple file copying.
         testFile.copyfile(testCopy)
-        self.assert_(testCopy.isfile())
-        self.assert_(testFile.bytes() == testCopy.bytes())
+        self.assertTrue(testCopy.isfile())
+        self.assertTrue(testFile.bytes() == testCopy.bytes())
 
         # Test copying into a directory.
         testCopy2 = testA / testFile.name
         testFile.copy(testA)
-        self.assert_(testCopy2.isfile())
-        self.assert_(testFile.bytes() == testCopy2.bytes())
+        self.assertTrue(testCopy2.isfile())
+        self.assertTrue(testFile.bytes() == testCopy2.bytes())
 
         # Make a link for the next test to use.
         if hasattr(os, 'symlink'):
@@ -303,33 +310,33 @@ class TempDirTestCase(unittest.TestCase):
 
         # Test copying directory tree.
         testA.copytree(testC)
-        self.assert_(testC.isdir())
+        self.assertTrue(testC.isdir())
         self.assertSetsEqual(
             testC.listdir(),
             [testC / testCopy.name,
              testC / testFile.name,
              testCopyOfLink])
-        self.assert_(not testCopyOfLink.islink())
+        self.assertTrue(not testCopyOfLink.islink())
 
         # Clean up for another try.
         testC.rmtree()
-        self.assert_(not testC.exists())
+        self.assertTrue(not testC.exists())
 
         # Copy again, preserving symlinks.
         testA.copytree(testC, True)
-        self.assert_(testC.isdir())
+        self.assertTrue(testC.isdir())
         self.assertSetsEqual(
             testC.listdir(),
             [testC / testCopy.name,
              testC / testFile.name,
              testCopyOfLink])
         if hasattr(os, 'symlink'):
-            self.assert_(testCopyOfLink.islink())
-            self.assert_(testCopyOfLink.readlink() == testFile)
+            self.assertTrue(testCopyOfLink.islink())
+            self.assertTrue(testCopyOfLink.readlink() == testFile)
 
         # Clean up.
         testDir.rmtree()
-        self.assert_(not testDir.exists())
+        self.assertTrue(not testDir.exists())
         self.assertList(d.listdir(), [])
 
     def assertList(self, listing, expected):
@@ -367,39 +374,39 @@ class TempDirTestCase(unittest.TestCase):
             Unicode codepoints.
             """
 
-            given = (u'Hello world\n'
-                     u'\u0d0a\u0a0d\u0d15\u0a15\r\n'
-                     u'\u0d0a\u0a0d\u0d15\u0a15\x85'
-                     u'\u0d0a\u0a0d\u0d15\u0a15\u2028'
-                     u'\r'
-                     u'hanging')
-            clean = (u'Hello world\n'
-                     u'\u0d0a\u0a0d\u0d15\u0a15\n'
-                     u'\u0d0a\u0a0d\u0d15\u0a15\n'
-                     u'\u0d0a\u0a0d\u0d15\u0a15\n'
-                     u'\n'
-                     u'hanging')
+            given = join(six.u('Hello world\n'),
+                         six.u('\u0d0a\u0a0d\u0d15\u0a15\r\n'),
+                         six.u('\u0d0a\u0a0d\u0d15\u0a15\x85'),
+                         six.u('\u0d0a\u0a0d\u0d15\u0a15\u2028'),
+                         six.u('\r'),
+                         six.u('hanging'))
+            clean = join(six.u('Hello world\n'),
+                         six.u('\u0d0a\u0a0d\u0d15\u0a15\n'),
+                         six.u('\u0d0a\u0a0d\u0d15\u0a15\n'),
+                         six.u('\u0d0a\u0a0d\u0d15\u0a15\n'),
+                         six.u('\n'),
+                         six.u('hanging'))
             givenLines = [
-                u'Hello world\n',
-                u'\u0d0a\u0a0d\u0d15\u0a15\r\n',
-                u'\u0d0a\u0a0d\u0d15\u0a15\x85',
-                u'\u0d0a\u0a0d\u0d15\u0a15\u2028',
-                u'\r',
-                u'hanging']
+                six.u('Hello world\n'),
+                six.u('\u0d0a\u0a0d\u0d15\u0a15\r\n'),
+                six.u('\u0d0a\u0a0d\u0d15\u0a15\x85'),
+                six.u('\u0d0a\u0a0d\u0d15\u0a15\u2028'),
+                six.u('\r'),
+                six.u('hanging')]
             expectedLines = [
-                u'Hello world\n',
-                u'\u0d0a\u0a0d\u0d15\u0a15\n',
-                u'\u0d0a\u0a0d\u0d15\u0a15\n',
-                u'\u0d0a\u0a0d\u0d15\u0a15\n',
-                u'\n',
-                u'hanging']
+                six.u('Hello world\n'),
+                six.u('\u0d0a\u0a0d\u0d15\u0a15\n'),
+                six.u('\u0d0a\u0a0d\u0d15\u0a15\n'),
+                six.u('\u0d0a\u0a0d\u0d15\u0a15\n'),
+                six.u('\n'),
+                six.u('hanging')]
             expectedLines2 = [
-                u'Hello world',
-                u'\u0d0a\u0a0d\u0d15\u0a15',
-                u'\u0d0a\u0a0d\u0d15\u0a15',
-                u'\u0d0a\u0a0d\u0d15\u0a15',
-                u'',
-                u'hanging']
+                six.u('Hello world'),
+                six.u('\u0d0a\u0a0d\u0d15\u0a15'),
+                six.u('\u0d0a\u0a0d\u0d15\u0a15'),
+                six.u('\u0d0a\u0a0d\u0d15\u0a15'),
+                six.u(''),
+                six.u('hanging')]
 
             # write bytes manually to file
             f = codecs.open(p, 'w', enc)
@@ -421,7 +428,7 @@ class TempDirTestCase(unittest.TestCase):
                 return
 
             # Write Unicode to file using path.write_text().
-            cleanNoHanging = clean + u'\n'  # This test doesn't work with a hanging line.
+            cleanNoHanging = clean + six.u('\n')  # This test doesn't work with a hanging line.
             p.write_text(cleanNoHanging, enc)
             p.write_text(cleanNoHanging, enc, append=True)
             # Check the result.
@@ -453,13 +460,13 @@ class TempDirTestCase(unittest.TestCase):
             def testLinesep(eol):
                 p.write_lines(givenLines, enc, linesep=eol)
                 p.write_lines(givenLines, enc, linesep=eol, append=True)
-                expected = 2 * cleanNoHanging.replace(u'\n', eol).encode(enc)
+                expected = 2 * cleanNoHanging.replace(six.u('\n'), eol).encode(enc)
                 self.assertEqual(p.bytes(), expected)
 
-            testLinesep(u'\n')
-            testLinesep(u'\r')
-            testLinesep(u'\r\n')
-            testLinesep(u'\x0d\x85')
+            testLinesep(six.u('\n'))
+            testLinesep(six.u('\r'))
+            testLinesep(six.u('\r\n'))
+            testLinesep(six.u('\x0d\x85'))
 
 
             # Again, but with linesep=None.
@@ -481,6 +488,6 @@ class TempDirTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     if __version__ != path_version:
-        print ("Version mismatch:  test_path.py version %s, path version %s" %
-               (__version__, path_version))
+        print(("Version mismatch:  test_path.py version %s, path version %s" %
+               (__version__, path_version)))
     unittest.main()

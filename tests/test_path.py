@@ -1,4 +1,4 @@
-import StringIO
+import io
 
 import nose
 
@@ -147,9 +147,9 @@ def test_non_child():
 
 def test_hash():
     def mock_open(self):
-        return StringIO.StringIO("hello\n")
+        return io.BytesIO(b"hello\n")
 
     m = path.path("/tmp/hullo.txt")
     m.open = mock_open
     h = m.read_md5()
-    assert h == '\xb1\x94j\xc9$\x92\xd24|b5\xb4\xd2a\x11\x84'
+    assert h == b"\xb1\x94j\xc9$\x92\xd24|b5\xb4\xd2a\x11\x84"
