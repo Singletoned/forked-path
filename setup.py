@@ -10,9 +10,9 @@ setup_data = dict(
     description="An object oriented file path module",
     url="http://github.com/Singletoned/forked-path",
     long_description="""
-    A fork of path.py by Jason Orendorff.
-    Regression tests and small enhancements by Ed Singleton.
-    """,
+        A fork of path.py by Jason Orendorff.
+        Regression tests and small enhancements by Ed Singleton.
+        """,
     classifiers=[
         "Programming Language :: Python",
         "License :: Freely Distributable",
@@ -23,6 +23,9 @@ setup_data = dict(
     ],
     keywords='path path.py file',
     license='',
+    install_requires=[
+        'six',
+    ],
     py_modules=['path'],
     include_package_data=True,
     zip_safe=False,
