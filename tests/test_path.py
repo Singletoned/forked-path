@@ -7,9 +7,11 @@ except ImportError:
 
 import path
 
+
 def test_repr():
     p = path.path("/temp/test_dir")
     assert repr(p) == "path('/temp/test_dir')"
+
 
 def test__add():
     p = path.path("/tmp/test_dir")
@@ -23,6 +25,7 @@ def test__add():
     p = path.path("/tmp/test_dir/")
     r = p + "/sub_dir"
     assert r == "/tmp/test_dir//sub_dir"
+
 
 def test__radd():
     p = path.path("sub_dir")
@@ -38,9 +41,11 @@ def test__radd():
     r = "/tmp/test_dir/" + p
     assert r == "/tmp/test_dir//sub_dir"
 
+
 def test_cwd():
     # TODO
     pass
+
 
 def test_abspath():
     # Check that abspath converts to path.path
@@ -49,9 +54,11 @@ def test_abspath():
     assert r == "/tmp/test_dir"
     assert isinstance(r, path.path)
 
+
 def test_normcase():
     # TODO
     pass
+
 
 def test_normpath():
     # Check that normpath runs and converts to path.path
@@ -60,9 +67,11 @@ def test_normpath():
     assert r == "/tmp/test_dir"
     assert isinstance(r, path.path)
 
+
 def test_realpath():
     # TODO
     pass
+
 
 def test_expanduser():
     # Check that expanduser runs and converts to path.path
@@ -72,13 +81,16 @@ def test_expanduser():
     assert isinstance(r, path.path)
     # TODO: Check that it expands `~` properly
 
+
 def test_expandvars():
     # TODO
     pass
 
+
 def test_expand():
     # TODO
     pass
+
 
 def test_get_namebase():
     # Test that _get_namebase doesn't return a path.path
@@ -91,6 +103,7 @@ def test_get_namebase():
     assert r == "test"
     assert not isinstance(r, path.path)
 
+
 def test_get_ext():
     # Test that _get_ext doesn't return a path.path
     p = path.path("/tmp/test_file")
@@ -102,12 +115,14 @@ def test_get_ext():
     assert r == ".file"
     assert not isinstance(r, path.path)
 
+
 def test_parent():
     # Test that parent returns the previous dir
     p = path.path("/tmp/sub_dir")
     r = p.parent
     assert r == "/tmp"
     assert isinstance(r, path.path)
+
 
 def test_abs_child():
     p = path.path("/tmp/test_dir")
@@ -117,6 +132,7 @@ def test_abs_child():
     assert r != p
     assert r is not p
 
+
 def test_rel_child():
     p = path.path("tmp/test_dir")
     r = p.child("child_dir")
@@ -125,11 +141,13 @@ def test_rel_child():
     assert r != p
     assert r is not p
 
+
 if py:
     def test_non_child():
         def do_test():
             p = path.path("tmp/test_dir")
-            r = p.child("../non_child_dir")
+            p.child("../non_child_dir")
+
 
         py.test.raises(InsecurePathError, do_test)
 
