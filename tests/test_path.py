@@ -1,9 +1,6 @@
 import StringIO
 
-try:
-    import py
-except ImportError:
-    py = None
+import nose
 
 import path
 
@@ -142,14 +139,11 @@ def test_rel_child():
     assert r is not p
 
 
-if py:
-    def test_non_child():
-        def do_test():
-            p = path.path("tmp/test_dir")
-            p.child("../non_child_dir")
+@nose.tools.raises(path.InsecurePathError)
+def test_non_child():
+    p = path.path("tmp/test_dir")
+    p.child("../non_child_dir")
 
-
-        py.test.raises(InsecurePathError, do_test)
 
 def test_hash():
     def mock_open(self):
