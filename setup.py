@@ -2,7 +2,7 @@ from setuptools import setup
 
 version = '0.3'
 
-setup(
+setup_data = dict(
     name='forked-path',
     version=version,
     author="Ed Singleton",
@@ -27,3 +27,11 @@ setup(
     include_package_data=True,
     zip_safe=False,
 )
+
+
+def main():
+    setup(**setup_data)
+
+
+if __name__ == '__main__':
+    main()
