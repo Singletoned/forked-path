@@ -34,7 +34,15 @@ Rereleased by Ed Singleton, March 2010
 
 from __future__ import generators
 
-import sys, warnings, os, fnmatch, glob, shutil, codecs, hashlib, tempfile
+import codecs
+import fnmatch
+import glob
+import hashlib
+import os
+import shutil
+import sys
+import tempfile
+import warnings
 
 __version__ = '2.2'
 __all__ = ['path', "InsecurePathError"]
@@ -84,12 +92,12 @@ _textmode = 'r'
 if hasattr(file, 'newlines'):
     _textmode = 'U'
 
-### Errors
 
 class InsecurePathError(Exception):
     """
     Error that is raised when the path provided to path is invalid.
     """
+
 
 class TreeWalkWarning(Warning):
     pass
@@ -118,7 +126,7 @@ class path(_base):
         """
         try:
             resultStr = _base.__add__(self, more)
-        except TypeError:  #Python bug
+        except TypeError:  # Python bug
             resultStr = NotImplemented
         if resultStr is NotImplemented:
             return resultStr
@@ -155,10 +163,10 @@ class path(_base):
         return cls(_getcwd())
     getcwd = classmethod(getcwd)
 
-
     # --- Operations on path strings.
 
     isabs = os.path.isabs
+
     def abspath(self):
         """
         Return the absolute path of the current path
@@ -169,12 +177,24 @@ class path(_base):
         """
         return self.__class__(os.path.abspath(self))
 
-    def normcase(self):      return self.__class__(os.path.normcase(self))
-    def normpath(self):      return self.__class__(os.path.normpath(self))
-    def realpath(self):      return self.__class__(os.path.realpath(self))
-    def expanduser(self):    return self.__class__(os.path.expanduser(self))
-    def expandvars(self):    return self.__class__(os.path.expandvars(self))
-    def dirname(self):       return self.__class__(os.path.dirname(self))
+    def normcase(self):
+        return self.__class__(os.path.normcase(self))
+
+    def normpath(self):
+        return self.__class__(os.path.normpath(self))
+
+    def realpath(self):
+        return self.__class__(os.path.realpath(self))
+
+    def expanduser(self):
+        return self.__class__(os.path.expanduser(self))
+
+    def expandvars(self):
+        return self.__class__(os.path.expandvars(self))
+
+    def dirname(self):
+        return self.__class__(os.path.dirname(self))
+
     basename = os.path.basename
 
     def expand(self):
@@ -572,7 +592,6 @@ class path(_base):
         cls = self.__class__
         return [cls(s) for s in glob.glob(_base(self / pattern))]
 
-
     # --- Reading or writing an entire file at once.
 
     def open(self, mode='r'):
@@ -640,7 +659,8 @@ class path(_base):
                      .replace(u'\x85', u'\n')
                      .replace(u'\u2028', u'\n'))
 
-    def write_text(self, text, encoding=None, errors='strict', linesep=os.linesep, append=False):
+    def write_text(self, text, encoding=None, errors='strict',
+                   linesep=os.linesep, append=False):
         r""" Write the given text to this file.
 
         The default behavior is to overwrite any existing file;
@@ -899,11 +919,13 @@ class path(_base):
             desc = win32security.GetFileSecurity(
                 self, win32security.OWNER_SECURITY_INFORMATION)
             sid = desc.GetSecurityDescriptorOwner()
-            account, domain, typecode = win32security.LookupAccountSid(None, sid)
+            account, domain, typecode = win32security.LookupAccountSid(
+                None, sid)
             return domain + u'\\' + account
         else:
             if pwd is None:
-                raise NotImplementedError("path.owner is not implemented on this platform.")
+                raise NotImplementedError(
+                    "path.owner is not implemented on this platform.")
             st = self.stat()
             return pwd.getpwuid(st.st_uid).pw_name
 
@@ -919,7 +941,6 @@ class path(_base):
     if hasattr(os, 'pathconf'):
         def pathconf(self, name):
             return os.pathconf(self, name)
-
 
     # --- Modifying operations on files and directories
 
@@ -940,13 +961,12 @@ class path(_base):
     def renames(self, new):
         os.renames(self, new)
 
-
     # --- Create/delete operations on directories
 
-    def mkdir(self, mode=0777):
+    def mkdir(self, mode=0o777):
         os.mkdir(self, mode)
 
-    def makedirs(self, mode=0777):
+    def makedirs(self, mode=0o777):
         os.makedirs(self, mode)
 
     def rmdir(self):
@@ -955,14 +975,13 @@ class path(_base):
     def removedirs(self):
         os.removedirs(self)
 
-
     # --- Modifying operations on files
 
     def touch(self):
         """ Set the access/modified times of this file to the current time.
         Create the file if it does not exist.
         """
-        fd = os.open(self, os.O_WRONLY | os.O_CREAT, 0666)
+        fd = os.open(self, os.O_WRONLY | os.O_CREAT, 0o666)
         os.close(fd)
         os.utime(self, None)
 
@@ -971,7 +990,6 @@ class path(_base):
 
     def unlink(self):
         os.unlink(self)
-
 
     # --- Links
 
@@ -1004,7 +1022,6 @@ class path(_base):
             else:
                 return (self.parent / p).abspath()
 
-
     # --- High-level functions from shutil
 
     copyfile = shutil.copyfile
@@ -1017,7 +1034,6 @@ class path(_base):
         move = shutil.move
     rmtree = shutil.rmtree
 
-
     # --- Special stuff from os
 
     if hasattr(os, 'chroot'):
@@ -1028,12 +1044,12 @@ class path(_base):
         def startfile(self):
             os.startfile(self)
 
-
     # --- Stuff from twisted.python.filepath
 
     def child(self, child_path):
         """
-        Return a path which is a direct descendant of the current path.  Raises an exception if it isn't.
+        Return a path which is a direct descendant of the current path.
+        Raises an exception if it isn't.
 
         >>> path('/tmp').child('foo')
         path('/tmp/foo')
@@ -1055,14 +1071,17 @@ class path(_base):
                 "%r is not a child of %s" % (newpath, self))
         return self.__class__(newpath)
 
+
 def temp_file():
     "Create a temp file and return a path object of it"
     file_name = tempfile.NamedTemporaryFile(delete=False).name
     return path(file_name)
 
+
 def temp_dir():
     dir_name = tempfile.mkdtemp()
     return path(dir_name)
+
 
 if contextlib:
     @contextlib.contextmanager
