@@ -35,6 +35,7 @@ Rereleased by Ed Singleton, March 2010
 from __future__ import generators
 
 import codecs
+import contextlib
 import fnmatch
 import glob
 import hashlib
@@ -59,39 +60,6 @@ else:
     except ImportError:
         pwd = None
 
-# Pre-2.3 support.  Are unicode filenames supported?
-_base = str
-_getcwd = os.getcwd
-try:
-    if os.path.supports_unicode_filenames:
-        _base = unicode
-        _getcwd = os.getcwdu
-except AttributeError:
-    pass
-
-# Try importing contextlib
-try:
-    import contextlib
-except ImportError:
-    contextlib = None
-
-# Pre-2.3 workaround for booleans
-try:
-    True, False
-except NameError:
-    True, False = 1, 0
-
-# Pre-2.3 workaround for basestring.
-try:
-    basestring
-except NameError:
-    basestring = (str, unicode)
-
-# Universal newline support
-_textmode = 'r'
-if hasattr(file, 'newlines'):
-    _textmode = 'U'
-
 
 class InsecurePathError(Exception):
     """
@@ -103,8 +71,8 @@ class TreeWalkWarning(Warning):
     pass
 
 
-class path(_base):
-    """ Represents a filesystem path.
+class path(str):
+    """Represents a filesystem path.
 
     For documentation on individual methods, consult their
     counterparts in os.path.
@@ -113,7 +81,7 @@ class path(_base):
     # --- Special Python methods.
 
     def __repr__(self):
-        return 'path(%s)' % _base.__repr__(self)
+        return 'path(%s)' % str.__repr__(self)
 
     # Adding a path and a string yields a path.
     def __add__(self, more):
@@ -125,7 +93,7 @@ class path(_base):
         path('/tmp/subdir')
         """
         try:
-            resultStr = _base.__add__(self, more)
+            resultStr = str.__add__(self, more)
         except TypeError:  # Python bug
             resultStr = NotImplemented
         if resultStr is NotImplemented:
@@ -158,10 +126,10 @@ class path(_base):
     # Make the / operator work even when true division is enabled.
     __truediv__ = __div__
 
+    @classmethod
     def getcwd(cls):
         """ Return the current working directory as a path object. """
-        return cls(_getcwd())
-    getcwd = classmethod(getcwd)
+        return cls(os.getcwd())
 
     # --- Operations on path strings.
 
@@ -211,7 +179,7 @@ class path(_base):
         return base
 
     def _get_ext(self):
-        f, ext = os.path.splitext(_base(self))
+        f, ext = os.path.splitext(str(self))
         return ext
 
     def _get_drive(self):
@@ -590,7 +558,7 @@ class path(_base):
         of all the files users have in their bin directories.
         """
         cls = self.__class__
-        return [cls(s) for s in glob.glob(_base(self / pattern))]
+        return [cls(s) for s in glob.glob(str(self / pattern))]
 
     # --- Reading or writing an entire file at once.
 
@@ -639,7 +607,7 @@ class path(_base):
         """
         if encoding is None:
             # 8-bit
-            f = self.open(_textmode)
+            f = self.open("r")
             try:
                 return f.read()
             finally:
